@@ -3,6 +3,7 @@ package com.mftplus.telegram.message;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.*;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Dice;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -172,6 +173,14 @@ public class MessageBuilder {
         editMessage.setReplyMarkup(inlineKeyboard);
 
         return editMessage;
+    }
+
+    public DeleteMessage buildDeleteMessage(Message message){
+        var deleteMessage = new DeleteMessage();
+        deleteMessage.setMessageId(message.getMessageId());
+        deleteMessage.setChatId(message.getChatId());
+
+        return deleteMessage;
     }
 
 
