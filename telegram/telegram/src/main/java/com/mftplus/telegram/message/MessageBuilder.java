@@ -1,6 +1,7 @@
 package com.mftplus.telegram.message;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -8,6 +9,10 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Dice;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -209,6 +214,36 @@ public class MessageBuilder {
         message.setSticker(file);
         return message;
     }
+
+    public AnswerInlineQuery buildWondersInlineQuery(InlineQuery inlineQuery){
+        var answer = new AnswerInlineQuery();
+        answer.setInlineQueryId(inlineQuery.getId());
+        List<InlineQueryResult> queryResults = new ArrayList<>();
+
+        queryResults.add(buildQueryResultArticle());
+
+        answer.setResults(queryResults);
+        return answer;
+
+    }
+
+    private InlineQueryResultArticle buildQueryResultArticle(){
+        var article = new InlineQueryResultArticle();
+        article.setId("1");
+        article.setTitle("Great Pyramid of Giza");
+        article.setDescription("The Great Pyramid pf Giza[a] is the largest egyptian pyramid. ");
+        article.setUrl("https://en.wikipedia.org/wiki/Great_Pyramod_of_Giza");
+        article.setHideUrl(true);
+        article.setThumbUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/450px-Kheops-Pyramid.jpg");
+
+        var content = new InputTextMessageContent();
+        content.setMessageText("The Great Pyramid of Giza[a] is the largest Egyptian pyramid. It served as the tomb of pharaoh Khufu, who ruled during the Fourth Dynasty of the Old Kingdom");
+        article.setInputMessageContent(content);
+
+        return article;
+    }
+
+
 
     public String generateFormattedText(String parsMode){
         if (ParseMode.MARKDOWNV2.equals(parsMode)){

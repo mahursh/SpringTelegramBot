@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 
 import java.io.File;
 import java.util.Map;
@@ -137,6 +138,12 @@ public class TabooBot extends TelegramLongPollingBot {
 
             }
 
+        } else if (update.hasInlineQuery()) {
+            InlineQuery inlineQuery = update.getInlineQuery();
+            String query = inlineQuery.getQuery();
+            if ("wonders".equals(query)){
+                execute(messageBuilder.buildWondersInlineQuery(inlineQuery));
+            }
         }
 
     }
