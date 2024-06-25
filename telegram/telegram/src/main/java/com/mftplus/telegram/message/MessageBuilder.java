@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -35,30 +36,30 @@ import java.util.List;
 @Component
 public class MessageBuilder {
 
-    public static final String DONATE_CALLBACK ="DONATE_CALLBACK";
-    public static final String DO_NOT_SHOW_THIS ="DO_NOT_SHOW_THIS";
-    public static final String NEXT_TIME ="NEXT_TIME";
+    public static final String DONATE_CALLBACK = "DONATE_CALLBACK";
+    public static final String DO_NOT_SHOW_THIS = "DO_NOT_SHOW_THIS";
+    public static final String NEXT_TIME = "NEXT_TIME";
 
     public SevenWonders sevenWonders;
 
 
     @SneakyThrows
     @PostConstruct
-    public void initSevenWonders(){
+    public void initSevenWonders() {
         var resource = new ClassPathResource("/files/seven-wonders.json");
         ObjectMapper mapper = new ObjectMapper();
-        sevenWonders = mapper.readValue(resource.getFile() , SevenWonders.class);
+        sevenWonders = mapper.readValue(resource.getFile(), SevenWonders.class);
     }
 
 
-    public SendMessage buildTextMessage(Long chatId , String text){
+    public SendMessage buildTextMessage(Long chatId, String text) {
         var message = new SendMessage();
         message.setChatId(chatId);
         message.setText(text);
         return message;
     }
 
-    public SendMessage buildFormattedTextMessage(Long chatId){
+    public SendMessage buildFormattedTextMessage(Long chatId) {
         var message = new SendMessage();
         message.setChatId(chatId);
 //        message.setParseMode(ParseMode.MARKDOWNV2);
@@ -66,10 +67,10 @@ public class MessageBuilder {
         String parsMode = ParseMode.MARKDOWNV2;
         message.setParseMode(parsMode);
         message.setText(generateFormattedText(parsMode));
-        return  message;
+        return message;
     }
 
-    public SendMessage buildReplyKeyboardMessage(Long chatId){
+    public SendMessage buildReplyKeyboardMessage(Long chatId) {
         var message = new SendMessage();
         message.setChatId(chatId);
         message.setText("Choose One Game!");
@@ -86,14 +87,14 @@ public class MessageBuilder {
         row3.add("bowling");
         row3.add("casino");
 
-        replyKeyboard.setKeyboard(List.of(row1 , row2 , row3));
+        replyKeyboard.setKeyboard(List.of(row1, row2, row3));
         replyKeyboard.setResizeKeyboard(true);
         replyKeyboard.setOneTimeKeyboard(false);
         message.setReplyMarkup(replyKeyboard);
         return message;
     }
 
-    public SendDice buildSendDice(Long chatId , String emoji){
+    public SendDice buildSendDice(Long chatId, String emoji) {
         var dice = new SendDice();
         dice.setChatId(chatId);
         dice.setEmoji(emoji);
@@ -101,17 +102,17 @@ public class MessageBuilder {
 
     }
 
-    public SendMessage buildDeleteKeyboardMessage(Long chatId){
+    public SendMessage buildDeleteKeyboardMessage(Long chatId) {
         var message = new SendMessage();
         message.setText("come back soon!");
         message.setChatId(chatId);
-        ReplyKeyboardRemove replyKeyboardRemove =  new ReplyKeyboardRemove();
+        ReplyKeyboardRemove replyKeyboardRemove = new ReplyKeyboardRemove();
         replyKeyboardRemove.setRemoveKeyboard(true);
         message.setReplyMarkup(replyKeyboardRemove);
         return message;
     }
 
-    public SendMessage buildInlineKeyboardMessage(Long chatId){
+    public SendMessage buildInlineKeyboardMessage(Long chatId) {
         var message = new SendMessage();
         message.setChatId(chatId);
         message.setText("Pleas Consider Donating.");
@@ -172,7 +173,7 @@ public class MessageBuilder {
 //    }
 
 
-    public EditMessageText buildDonateOptions(Message message){
+    public EditMessageText buildDonateOptions(Message message) {
         var editMessage = new EditMessageText();
         editMessage.setChatId(message.getChatId());
         editMessage.setMessageId(message.getMessageId());
@@ -197,7 +198,7 @@ public class MessageBuilder {
         return editMessage;
     }
 
-    public DeleteMessage buildDeleteMessage(Message message){
+    public DeleteMessage buildDeleteMessage(Message message) {
         var deleteMessage = new DeleteMessage();
         deleteMessage.setMessageId(message.getMessageId());
         deleteMessage.setChatId(message.getChatId());
@@ -206,7 +207,7 @@ public class MessageBuilder {
     }
 
 
-    public SendPhoto buildPhotoMessage(Long chatId , String url , String caption){
+    public SendPhoto buildPhotoMessage(Long chatId, String url, String caption) {
         var message = new SendPhoto();
         message.setChatId(chatId);
         message.setCaption(caption);
@@ -215,16 +216,16 @@ public class MessageBuilder {
         return message;
     }
 
-    public SendDocument buildDocumentMessage(Long chatId , String caption , File file){
+    public SendDocument buildDocumentMessage(Long chatId, String caption, File file) {
         var message = new SendDocument();
         message.setChatId(chatId);
         message.setCaption(caption);
-        var document = new InputFile(file , file.getName());
+        var document = new InputFile(file, file.getName());
         message.setDocument(document);
         return message;
     }
 
-    public SendSticker buildStickerMessage(Long chatId , String fileId){
+    public SendSticker buildStickerMessage(Long chatId, String fileId) {
         var message = new SendSticker();
         message.setChatId(chatId);
         var file = new InputFile(fileId);
@@ -261,22 +262,47 @@ public class MessageBuilder {
 //    }
 
 
-    public AnswerInlineQuery buildWondersInlineQuery(InlineQuery inlineQuery){
+    public AnswerInlineQuery buildWondersInlineQuery(InlineQuery inlineQuery) {
         var answer = new AnswerInlineQuery();
         answer.setInlineQueryId(inlineQuery.getId());
         List<InlineQueryResult> queryResults = new ArrayList<>();
 
         List<Article> articles = sevenWonders.getArticles();
-      for (int i = 0 ; i < articles.size(); i++){
-        InlineQueryResultArticle article = buildQueryResultArticle(i +"" , articles.get(i));
-          queryResults.add(article);
-      }
+        for (int i = 0; i < articles.size(); i++) {
+            InlineQueryResultArticle article = buildQueryResultArticle(i + "", articles.get(i));
+            queryResults.add(article);
+        }
 
         answer.setResults(queryResults);
         return answer;
 
     }
- private InlineQueryResultArticle buildQueryResultArticle(String id , Article article){
+
+    public AnswerInlineQuery buildColorInlineQuery(InlineQuery inlineQuery) {
+        var answer = new AnswerInlineQuery();
+        answer.setInlineQueryId(inlineQuery.getId());
+        List<InlineQueryResult> queryResults = new ArrayList<>();
+        String hex = inlineQuery.getQuery().substring("color ".length());
+        if (hex.length() == 6) {
+            queryResults.add(buildInlineQueryPhoto("1" , hex));
+        }
+        answer.setResults(queryResults);
+        return answer;
+
+
+    }
+    private InlineQueryResultPhoto buildInlineQueryPhoto(String id , String hex){
+        var inlinePhoto = new InlineQueryResultPhoto();
+        inlinePhoto.setId(id);
+        inlinePhoto.setCaption(hex);
+        inlinePhoto.setPhotoUrl("https://singlecolorimage.com/get/%s/300x300".formatted(hex));
+        inlinePhoto.setThumbUrl("https://singlecolorimage.com/get/%s/100x100".formatted(hex));
+        inlinePhoto.setPhotoHeight(100);
+        inlinePhoto.setPhotoWidth(100);
+        return inlinePhoto;
+    }
+
+    private InlineQueryResultArticle buildQueryResultArticle(String id, Article article) {
         var resultArticle = new InlineQueryResultArticle();
         resultArticle.setId(id);
         resultArticle.setTitle(article.getTitle());
@@ -293,20 +319,21 @@ public class MessageBuilder {
     }
 
 
-
-    public String generateFormattedText(String parsMode){
-        if (ParseMode.MARKDOWNV2.equals(parsMode)){
+    public String generateFormattedText(String parsMode) {
+        if (ParseMode.MARKDOWNV2.equals(parsMode)) {
             return """
                     [inline URL](http://www.example.com/)
                     [inline user mention](tg://user?id=531474683)
                     """;
-        }else if (ParseMode.HTML.equals(parsMode)){
+        } else if (ParseMode.HTML.equals(parsMode)) {
             return """
                     <span class="tg-spoiler">using span tag</span>
                     <tg-spoiler>tg-spoiler tag</tg-spoiler>
-                    
+                                        
                     """;
         }
         return null;
     }
+
+
 }
