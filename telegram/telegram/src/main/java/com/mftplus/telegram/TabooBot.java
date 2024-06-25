@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDice;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -83,50 +84,46 @@ public class TabooBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        Thread.currentThread().setName("Telegram - onUpdateReceived");//changing name of thread for log.
+        //changing name of thread for log.
+        Thread.currentThread().setName("Telegram - onUpdateReceived");
 
-//        logger.info("Update received: {}", update);
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//            logger.info("Received message: {}", update.getMessage().getText());
-//        } else {
-//            logger.warn("Received update with no text message: {}", update);
-//        }
-//        ---------------------------------------------------------
-        Message message = update.getMessage();
-        Long chatId = message.getChatId();
-        logger.warn("Telegram id ={}",message.getFrom().getId());
-//       SendMessage sendMessage = messageBuilder.buildTextMessage(chatId , "My Test Text !");
-//       execute(sendMessage);
-//        var sendPhoto = messageBuilder.buildPhotoMessage(chatId , PHOTO_URL , PHOTO_CAPTION);
-//        execute(sendPhoto);
-//       ---------------------------------------------
+        if (update.hasMessage()) {
 
-        if (message.hasText()) {
-            if (message.hasEntities()){
-                logMessageEntities(message);
-            }
-            String text = message.getText();
-            if (GAME_BY_EMOJI.keySet().contains(text)){
-                execute(messageBuilder.buildSendDice(chatId , GAME_BY_EMOJI.get(text)));
-                return;
-            }
+
+            Message message = update.getMessage();
+            Long chatId = message.getChatId();
+            logger.warn("Telegram id ={}", message.getFrom().getId());
+
+            if (message.hasText()) {
+                if (message.hasEntities()) {
+                    logMessageEntities(message);
+                }
+                String text = message.getText();
+                if (GAME_BY_EMOJI.keySet().contains(text)) {
+                    execute(messageBuilder.buildSendDice(chatId, GAME_BY_EMOJI.get(text)));
+                    return;
+                }
 
 
                 switch (text) {
-                case "/text" -> execute(messageBuilder.buildTextMessage(chatId, "My Test Text !"));
-                case "/photo" -> execute(messageBuilder.buildPhotoMessage(chatId, PHOTO_URL, PHOTO_CAPTION));
-                case "/document" ->
-                        execute(messageBuilder.buildDocumentMessage(chatId, "Here Is A File !", readFile("/files/New_york_times_square-terabass_(cropped).jpg")));
-                case "/sticker" -> execute(messageBuilder.buildStickerMessage(chatId, STICKER_FILE_ID));
-                case  "/formattedText" -> execute(messageBuilder.buildFormattedTextMessage(chatId));
-                case "/play" -> execute(messageBuilder.buildReplyKeyboardMessage(chatId));
-                case "/endGame" -> execute(messageBuilder.buildDeleteKeyboardMessage(chatId));
-                case "/donate" -> execute(messageBuilder.buildInlineKeyboardMessage(chatId));
+                    case "/text" -> execute(messageBuilder.buildTextMessage(chatId, "My Test Text !"));
+                    case "/photo" -> execute(messageBuilder.buildPhotoMessage(chatId, PHOTO_URL, PHOTO_CAPTION));
+                    case "/document" ->
+                            execute(messageBuilder.buildDocumentMessage(chatId, "Here Is A File !", readFile("/files/New_york_times_square-terabass_(cropped).jpg")));
+                    case "/sticker" -> execute(messageBuilder.buildStickerMessage(chatId, STICKER_FILE_ID));
+                    case "/formattedText" -> execute(messageBuilder.buildFormattedTextMessage(chatId));
+                    case "/play" -> execute(messageBuilder.buildReplyKeyboardMessage(chatId));
+                    case "/endGame" -> execute(messageBuilder.buildDeleteKeyboardMessage(chatId));
+                    case "/donate" -> execute(messageBuilder.buildInlineKeyboardMessage(chatId));
+                }
+            } else if (message.hasSticker()) {
+                logger.warn("Sticker File ID={}", message.getSticker().getFileId());
             }
-        }else if(message.hasSticker()){
-            logger.warn("Sticker File ID={}" , message.getSticker().getFileId());
-        }
+        }else if (update.hasCallbackQuery()){
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            logger.warn("Callback Value ={}" , callbackQuery.getData());
 
+        }
 
     }
 
