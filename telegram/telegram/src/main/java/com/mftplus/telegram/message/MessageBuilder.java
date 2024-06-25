@@ -122,6 +122,30 @@ public class MessageBuilder {
 
     }
 
+    public SendMessage buildDonateOptions(Long chatId){
+        var message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("You Can Donate Through :");
+
+        var inlineKeyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+
+        var payPalBtn = new InlineKeyboardButton();
+        payPalBtn.setText("PayPal");
+        payPalBtn.setUrl("https://www.paypal.com/");
+
+        var kofiBtn = new InlineKeyboardButton();
+        kofiBtn.setText("ko-fi");
+        kofiBtn.setUrl("https://www.ko-fi.com/");
+
+        listOfButtons.add(List.of(payPalBtn, kofiBtn));
+
+        inlineKeyboard.setKeyboard(listOfButtons);
+        message.setReplyMarkup(inlineKeyboard);
+
+        return message;
+    }
+
 
     public SendPhoto buildPhotoMessage(Long chatId , String url , String caption){
         var message = new SendPhoto();
