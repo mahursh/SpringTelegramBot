@@ -1,5 +1,11 @@
 package com.mftplus.telegram.message;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mftplus.telegram.entity.Article;
+import com.mftplus.telegram.entity.SevenWonders;
+import jakarta.annotation.PostConstruct;
+import lombok.SneakyThrows;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -32,6 +38,17 @@ public class MessageBuilder {
     public static final String DONATE_CALLBACK ="DONATE_CALLBACK";
     public static final String DO_NOT_SHOW_THIS ="DO_NOT_SHOW_THIS";
     public static final String NEXT_TIME ="NEXT_TIME";
+
+    public SevenWonders sevenWonders;
+
+
+    @SneakyThrows
+    @PostConstruct
+    public void initSevenWonders(){
+        var resource = new ClassPathResource("/files/seven-wonders.json");
+        ObjectMapper mapper = new ObjectMapper();
+        sevenWonders = mapper.readValue(resource.getFile() , SevenWonders.class);
+    }
 
 
     public SendMessage buildTextMessage(Long chatId , String text){
@@ -215,32 +232,64 @@ public class MessageBuilder {
         return message;
     }
 
+//    public AnswerInlineQuery buildWondersInlineQuery(InlineQuery inlineQuery){
+//        var answer = new AnswerInlineQuery();
+//        answer.setInlineQueryId(inlineQuery.getId());
+//        List<InlineQueryResult> queryResults = new ArrayList<>();
+//
+//        queryResults.add(buildQueryResultArticle());
+//
+//        answer.setResults(queryResults);
+//        return answer;
+//
+//    }
+
+//    private InlineQueryResultArticle buildQueryResultArticle(){
+//        var article = new InlineQueryResultArticle();
+//        article.setId("1");
+//        article.setTitle("Great Pyramid of Giza");
+//        article.setDescription("The Great Pyramid pf Giza[a] is the largest egyptian pyramid. ");
+//        article.setUrl("https://en.wikipedia.org/wiki/Great_Pyramod_of_Giza");
+//        article.setHideUrl(true);
+//        article.setThumbUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/450px-Kheops-Pyramid.jpg");
+//
+//        var content = new InputTextMessageContent();
+//        content.setMessageText("The Great Pyramid of Giza[a] is the largest Egyptian pyramid. It served as the tomb of pharaoh Khufu, who ruled during the Fourth Dynasty of the Old Kingdom");
+//        article.setInputMessageContent(content);
+//
+//        return article;
+//    }
+
+
     public AnswerInlineQuery buildWondersInlineQuery(InlineQuery inlineQuery){
         var answer = new AnswerInlineQuery();
         answer.setInlineQueryId(inlineQuery.getId());
         List<InlineQueryResult> queryResults = new ArrayList<>();
 
-        queryResults.add(buildQueryResultArticle());
+        List<Article> articles = sevenWonders.getArticles();
+      for (int i = 0 ; i < articles.size(); i++){
+        InlineQueryResultArticle article = buildQueryResultArticle(i +"" , articles.get(i));
+          queryResults.add(article);
+      }
 
         answer.setResults(queryResults);
         return answer;
 
     }
-
-    private InlineQueryResultArticle buildQueryResultArticle(){
-        var article = new InlineQueryResultArticle();
-        article.setId("1");
-        article.setTitle("Great Pyramid of Giza");
-        article.setDescription("The Great Pyramid pf Giza[a] is the largest egyptian pyramid. ");
-        article.setUrl("https://en.wikipedia.org/wiki/Great_Pyramod_of_Giza");
-        article.setHideUrl(true);
-        article.setThumbUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/450px-Kheops-Pyramid.jpg");
+ private InlineQueryResultArticle buildQueryResultArticle(String id , Article article){
+        var resultArticle = new InlineQueryResultArticle();
+        resultArticle.setId(id);
+        resultArticle.setTitle(article.getTitle());
+        resultArticle.setDescription(article.getDescription());
+        resultArticle.setUrl(article.getArticleUrl());
+        resultArticle.setHideUrl(true);
+        resultArticle.setThumbUrl(article.getThumbUrl());
 
         var content = new InputTextMessageContent();
-        content.setMessageText("The Great Pyramid of Giza[a] is the largest Egyptian pyramid. It served as the tomb of pharaoh Khufu, who ruled during the Fourth Dynasty of the Old Kingdom");
-        article.setInputMessageContent(content);
+        content.setMessageText(article.getDescription());
+        resultArticle.setInputMessageContent(content);
 
-        return article;
+        return resultArticle;
     }
 
 
