@@ -285,13 +285,13 @@ public class MessageBuilder {
         List<InlineQueryResult> queryResults = new ArrayList<>();
         String hex = inlineQuery.getQuery().substring("color ".length());
         if (hex.length() == 6) {
-           List<String> tones = new ArrayList<>();
-           tones.addAll(generateShades(hex));
-           tones.add(hex);
-           tones.addAll(generateTints(hex));
-            for (int i = 0; i < tones.size() ; i++) {
-                queryResults.add(buildInlineQueryPhoto(i + "" , tones.get(i)));
-                
+            List<String> tones = new ArrayList<>();
+            tones.addAll(generateShades(hex));
+            tones.add(hex);
+            tones.addAll(generateTints(hex));
+            for (int i = 0; i < tones.size(); i++) {
+                queryResults.add(buildInlineQueryPhoto(i + "", tones.get(i)));
+
             }
         }
         answer.setResults(queryResults);
@@ -299,7 +299,8 @@ public class MessageBuilder {
 
 
     }
-    private InlineQueryResultPhoto buildInlineQueryPhoto(String id , String hex){
+
+    private InlineQueryResultPhoto buildInlineQueryPhoto(String id, String hex) {
         var inlinePhoto = new InlineQueryResultPhoto();
         inlinePhoto.setId(id);
         inlinePhoto.setCaption(hex);
@@ -344,39 +345,40 @@ public class MessageBuilder {
     }
 
 
-
-    public static List<String> generateTints(String hexColor){
-        int baseColor = Integer.parseInt(hexColor , 16);
+    public static List<String> generateTints(String hexColor) {
+        int baseColor = Integer.parseInt(hexColor, 16);
         int baseRed = (baseColor >> 16) & 0xFF;
         int baseGreen = (baseColor >> 8) & 0xFF;
         int baseBlue = baseColor & 0xFF;
 
         LinkedList<String> tints = new LinkedList<>();
 
-        for (int i = 1 ; i <= 5 ; i++){
-            int r = (int) ((255 - baseRed) *  (i * 0.1) + baseRed);
-            int g = (int) ((255 - baseGreen) *  (i * 0.1) + baseGreen);
-            int b = (int) ((255 - baseBlue) *  (i * 0.1) + baseBlue);
+        for (int i = 1; i <= 5; i++) {
+            int r = (int) ((255 - baseRed) * (i * 0.1) + baseRed);
+            int g = (int) ((255 - baseGreen) * (i * 0.1) + baseGreen);
+            int b = (int) ((255 - baseBlue) * (i * 0.1) + baseBlue);
 
-            String tintHex = String.format("%02X%02X%02X" , r , g , b);
+            String tintHex = String.format("%02X%02X%02X", r, g, b);
             tints.push(tintHex);
         }
         return tints;
 
-    } public static List<String> generateShades(String hexColor){
-        int baseColor = Integer.parseInt(hexColor , 16);
+    }
+
+    public static List<String> generateShades(String hexColor) {
+        int baseColor = Integer.parseInt(hexColor, 16);
         int baseRed = (baseColor >> 16) & 0xFF;
         int baseGreen = (baseColor >> 8) & 0xFF;
         int baseBlue = baseColor & 0xFF;
 
         LinkedList<String> shades = new LinkedList<>();
 
-        for (int i = 1 ; i <= 5 ; i++){
+        for (int i = 1; i <= 5; i++) {
             int r = (int) (baseRed * (1 - (i * 0.1)));
             int g = (int) (baseGreen * (1 - (i * 0.1)));
             int b = (int) (baseBlue * (1 - (i * 0.1)));
 
-            String shadeHex = String.format("%02X%02X%02X" , r , g , b);
+            String shadeHex = String.format("%02X%02X%02X", r, g, b);
             shades.push(shadeHex);
         }
         return shades;
