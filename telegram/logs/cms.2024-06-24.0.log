@@ -1,0 +1,16 @@
+2024-06-24 18:43:26.065 [INFO ] c.mftplus.telegram.TelegramApplication   : Starting TelegramApplication using Java 17.0.7 with PID 3048 (C:\Users\Asus\Downloads\telegram\telegram\target\classes started by Asus in C:\Users\Asus\Downloads\telegram)
+2024-06-24 18:43:26.068 [DEBUG] c.mftplus.telegram.TelegramApplication   : Running with Spring Boot v3.2.6, Spring v6.1.8
+2024-06-24 18:43:26.073 [INFO ] c.mftplus.telegram.TelegramApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-06-24 18:43:26.155 [INFO ] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-06-24 18:43:26.156 [INFO ] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-06-24 18:43:27.312 [INFO ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2024-06-24 18:43:27.326 [INFO ] o.a.coyote.http11.Http11NioProtocol      : Initializing ProtocolHandler ["http-nio-8080"]
+2024-06-24 18:43:27.328 [INFO ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-24 18:43:27.328 [INFO ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2024-06-24 18:43:27.398 [INFO ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-24 18:43:27.399 [INFO ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1242 ms
+2024-06-24 18:43:27.652 [WARN ] com.mftplus.telegram.TabooBot            : TabooBot initialized with username: FirstAttemptBottttttBot
+2024-06-24 18:43:27.955 [INFO ] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-06-24 18:43:27.971 [INFO ] o.a.coyote.http11.Http11NioProtocol      : Starting ProtocolHandler ["http-nio-8080"]
+2024-06-24 18:43:28.000 [INFO ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2024-06-24 18:43:28.009 [INFO ] c.mftplus.telegram.TelegramApplication   : Started TelegramApplication in 2.748 seconds (process running for 3.582)

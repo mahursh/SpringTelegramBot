@@ -1,0 +1,6 @@
+#app:
+#  telegram:
+#    username: FirstAttemptBottttttBot
+#    token: 7237134543:AAHV0_cPLwgNUmNeAQwwkIboPP0YOaEh01w
+#logging:
+#  config: classpath:logback-spring.xml
