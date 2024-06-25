@@ -385,5 +385,30 @@ public class MessageBuilder {
 
     }
 
+    public SendMessage buildInlineQueryMessage(Long chatId){
+        var message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("Inline query options:");
+
+        var inlineKeyboard  = new InlineKeyboardMarkup();
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+
+        var wondersBtn = new InlineKeyboardButton();
+        wondersBtn.setText("Wonders");
+        wondersBtn.setSwitchInlineQueryCurrentChat("wonders");
+        row1.add(wondersBtn);
+
+        var colorBtn = new InlineKeyboardButton();
+        colorBtn.setText("Color");
+        colorBtn.setSwitchInlineQueryCurrentChat("color");
+        row1.add(colorBtn);
+
+        inlineKeyboard.setKeyboard(List.of(row1));
+
+        message.setReplyMarkup(inlineKeyboard);
+
+        return message;
+    }
+
 
 }

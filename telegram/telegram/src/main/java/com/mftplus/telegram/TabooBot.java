@@ -118,6 +118,7 @@ public class TabooBot extends TelegramLongPollingBot {
                     case "/play" -> execute(messageBuilder.buildReplyKeyboardMessage(chatId));
                     case "/endGame" -> execute(messageBuilder.buildDeleteKeyboardMessage(chatId));
                     case "/donate" -> execute(messageBuilder.buildInlineKeyboardMessage(chatId));
+                    case "/inlineQuery" -> execute(messageBuilder.buildInlineQueryMessage(chatId));
                 }
             } else if (message.hasSticker()) {
                 logger.warn("Sticker File ID={}", message.getSticker().getFileId());
