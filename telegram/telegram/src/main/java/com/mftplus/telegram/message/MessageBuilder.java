@@ -3,8 +3,10 @@ package com.mftplus.telegram.message;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.*;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Dice;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -122,10 +124,36 @@ public class MessageBuilder {
 
     }
 
-    public SendMessage buildDonateOptions(Long chatId){
-        var message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText("You Can Donate Through :");
+//    public SendMessage buildDonateOptions(Long chatId){
+//        var message = new SendMessage();
+//        message.setChatId(chatId);
+//        message.setText("You Can Donate Through :");
+//
+//        var inlineKeyboard = new InlineKeyboardMarkup();
+//        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+//
+//        var payPalBtn = new InlineKeyboardButton();
+//        payPalBtn.setText("PayPal");
+//        payPalBtn.setUrl("https://www.paypal.com/");
+//
+//        var kofiBtn = new InlineKeyboardButton();
+//        kofiBtn.setText("ko-fi");
+//        kofiBtn.setUrl("https://www.ko-fi.com/");
+//
+//        listOfButtons.add(List.of(payPalBtn, kofiBtn));
+//
+//        inlineKeyboard.setKeyboard(listOfButtons);
+//        message.setReplyMarkup(inlineKeyboard);
+//
+//        return message;
+//    }
+
+
+    public EditMessageText buildDonateOptions(Message message){
+        var editMessage = new EditMessageText();
+        editMessage.setChatId(message.getChatId());
+        editMessage.setMessageId(message.getMessageId());
+        editMessage.setText("%s\n\nYou Can Donate Through :".formatted(message.getText()));
 
         var inlineKeyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
@@ -141,9 +169,9 @@ public class MessageBuilder {
         listOfButtons.add(List.of(payPalBtn, kofiBtn));
 
         inlineKeyboard.setKeyboard(listOfButtons);
-        message.setReplyMarkup(inlineKeyboard);
+        editMessage.setReplyMarkup(inlineKeyboard);
 
-        return message;
+        return editMessage;
     }
 
 

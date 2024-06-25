@@ -123,12 +123,13 @@ public class TabooBot extends TelegramLongPollingBot {
             }
         }else if (update.hasCallbackQuery()){
             CallbackQuery callbackQuery = update.getCallbackQuery();
-            Long chatId = callbackQuery.getMessage().getChatId();
+            Message message = callbackQuery.getMessage();
+//            Long chatId = callbackQuery.getMessage().getChatId();
 
             logger.warn("Callback Value ={}" , callbackQuery.getData());
 
             if (DONATE_CALLBACK.equals(callbackQuery.getData())){
-               execute(messageBuilder.buildDonateOptions(chatId));
+               execute(messageBuilder.buildDonateOptions(message));
             }
 
         }
